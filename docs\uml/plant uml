@@ -1,1 +1,50 @@
+@startuml
+title Online Course Management System - MVC Architecture
+
+skinparam packageStyle rect
+skinparam rectangle {
+    BackgroundColor<<Presentation>> LightBlue
+    BackgroundColor<<Application>> LightGreen
+    BackgroundColor<<Data>> LightYellow
+}
+
+actor User
+
+' Presentation Layer
+package "Presentation Layer" <<Presentation>> {
+    rectangle View {
+        :Displays UI;
+        :Sends user input to Controller;
+    }
+}
+
+' Application Layer
+package "Application Layer" <<Application>> {
+    rectangle Controller {
+        :Handles requests;
+        :Processes business logic;
+        :Updates View;
+    }
+}
+
+' Data Layer
+package "Data Layer" <<Data>> {
+    rectangle Model {
+        :Handles data storage;
+        :Validates and manages data;
+    }
+}
+
+database Database {
+    :Persistent storage;
+}
+
+' Relationships
+User --> View : interacts with
+View --> Controller : sends requests
+Controller --> Model : queries/updates
+Model --> Database : fetch/store data
+Controller --> View : updates display
+
+@enduml
 
