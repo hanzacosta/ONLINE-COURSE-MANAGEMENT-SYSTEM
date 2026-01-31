@@ -1,1 +1,18 @@
+@startuml
+skinparam style strictuml
+skinparam monochrome true
 
+interface Repository
+
+class CourseRepository implements Repository
+class StudentRepository implements Repository
+
+class RepositoryFactory <<Factory>> {
+    + static get_repository(repo_type: string): Repository
+}
+
+class CourseService
+
+CourseService --> RepositoryFactory : asks for 'course'
+RepositoryFactory ..> CourseRepository : instantiates
+@enduml
