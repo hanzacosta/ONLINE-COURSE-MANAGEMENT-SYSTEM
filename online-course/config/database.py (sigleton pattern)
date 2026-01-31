@@ -1,0 +1,22 @@
+class DatabaseConnection:
+    _instance = None
+
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super(DatabaseConnection, cls).__new__(cls)
+            cls._instance._conn = sqlite3.connect('online_courses.db', check_same_thread=False)
+            cls._instance._conn.row_factory = sqlite3.Row
+        return cls._instance
+
+    def get_connection(self):
+        return self._instance._conn
+
+def init_db():
+    db = DatabaseConnection()
+    conn = db.get_connection()
+    cursor = conn.cursor()
+    cursor.execute('''CREATE TABLE IF NOT EXISTS courses (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, description TEXT)''')
+    cursor.execute('''CREATE TABLE IF NOT EXISTS students (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, email TEXT UNIQUE NOT NULL)''')
+    conn.commit()
+
+init_db()
