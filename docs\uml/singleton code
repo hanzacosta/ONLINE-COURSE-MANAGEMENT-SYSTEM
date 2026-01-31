@@ -1,1 +1,19 @@
+@startuml
+skinparam style strictuml
+skinparam monochrome true
 
+class DatabaseConnection <<Singleton>> {
+    - static _instance: DatabaseConnection
+    - _conn: sqlite3.Connection
+    --
+    + __new__(): DatabaseConnection
+    + get_connection(): Connection
+}
+
+note right of DatabaseConnection::__new__
+  If _instance is None:
+    Create new connection
+  Return _instance
+end note
+
+@enduml
