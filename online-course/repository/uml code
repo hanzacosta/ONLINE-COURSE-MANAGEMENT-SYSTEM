@@ -1,19 +1,24 @@
-Python
-from config.database import DatabaseConnection
-from models.courseModel import Course
+@startuml
+skinparam style strictuml
+skinparam monochrome true
 
-class CourseRepository:
-    def __init__(self):
-        self.db = DatabaseConnection().get_connection()
+package "Models" {
+    class Course {
+        + id: int
+        + name: string
+    }
+}
 
-    def get_all(self):
-        cursor = self.db.cursor()
-        cursor.execute("SELECT * FROM courses")
-        return [Course(row['id'], row['name'], row['description']) for row in cursor.fetchall()]
+package "Repositories" {
+    class CourseRepository {
+        - db: Connection
+        + get_all(): List<Course>
+        + get_by_id(id: int): Course
+    }
+}
 
-    def get_by_id(self, course_id):
-        cursor = self.db.cursor()
-        cursor.execute("SELECT * FROM courses WHERE id=?", (course_id,))
-        row = cursor.fetchone()
-        return Course(row['id'], row['name'], row['description']) if row else None
+class DatabaseConnection <<Singleton>>
 
+CourseRepository --> DatabaseConnection : gets connection
+CourseRepository ..> Course : creates/returns
+@enduml
